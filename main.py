@@ -1,12 +1,10 @@
 """
-Saves 50 previous songs in sqlalchemy database.
+Saves 50 previous songs in sqlalchemy database periodically
 """
-
 from sqlalchemy import create_engine, Column, Integer, Boolean, String, DateTime
 from sqlalchemy.dialects.sqlite import insert
 from sqlalchemy.orm import declarative_base, Session
 from spotify_lib import get_recently_played_songs
-
 from log import logger
 
 base = declarative_base()
@@ -38,11 +36,17 @@ def update_tracks(tracks: list[dict[str]]):
     with engine.begin() as connection:
         connection.execute(on_conflict_stmt)
 
+import time
+from config import SLEEP_TIME
+
 if __name__ == "__main__":
-    try:
-        update_tracks(get_recently_played_songs())
-    except Exception as e:
-        logger.info(msg=f"Failed to fetch tracks: {e}")
-    else:
-        logger.info(msg=f"Successfully fetched new tracks")
+    while True:
+        try:
+            update_tracks(get_recently_played_songs())
+        except Exception as e:
+            logger.info(msg=f"Failed to fetch tracks: {e}")
+            break
+        else:
+            logger.info(msg=f"Successfully fetched new tracks")
+            time.sleep(SLEEP_TIME)
 
