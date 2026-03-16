@@ -21,20 +21,29 @@ pip install -r requirements.txt
 
 **2. Create a Spotify app**
 
-Go to the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard) and create an app. Set the redirect URI to `http://localhost:8888/callback` (or whatever you prefer).
+Go to the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard) and create an app. Set the redirect URI to `http://127.0.0.1:8888/callback`.
 
 **3. Configure environment variables**
 
-Create a `.env` file in the project root:
-```env
-SPOTIPY_CLIENT_ID=your_client_id
-SPOTIPY_CLIENT_SECRET=your_client_secret
-SPOTIPY_REDIRECT_URI=http://localhost:8888/callback
+```bash
+cp .env_example .env
 ```
 
-**4. Authenticate**
+Fill in your credentials:
+```env
+SPOTIPY_CLIENT_ID="your-client-id"
+SPOTIPY_CLIENT_SECRET="your-secret-id"
+SPOTIPY_REDIRECT_URI="http://127.0.0.1:8888/callback"
+```
 
-Run once manually to complete the OAuth flow (a browser prompt or URL will appear):
+**4. Create the data directory**
+```bash
+mkdir -p data
+```
+
+**5. Authenticate**
+
+Run once manually to complete the OAuth flow:
 ```bash
 python main.py
 ```
@@ -54,12 +63,14 @@ To run on a schedule, add a cron job (e.g. every 30 minutes):
 
 ## Docker
 
+The `data/` directory is created automatically inside the container.
+
+Pull and run with docker-compose:
 ```bash
-docker build -t spotify-tracker .
-docker run --env-file .env -v $(pwd)/data:/app/data spotify-tracker
+docker-compose up -d
 ```
 
-> Note: Initial OAuth requires an interactive browser step. Run locally first to generate the `.cache` token file, then mount it into the container.
+> Note: Initial OAuth requires an interactive browser step. Run `python main.py` locally first to generate the `.cache` token file — it is mounted into the container automatically via `docker-compose.yml`.
 
 ## Database schema
 
