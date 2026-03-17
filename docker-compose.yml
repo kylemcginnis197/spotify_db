@@ -5,6 +5,8 @@ services:
     restart: unless-stopped
     env_file: 
       - .env
+    environment:
+      - update_interval=3600
     volumes:
       - ./data:/app/data
       - ./.cache:/app/.cache

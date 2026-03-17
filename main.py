@@ -37,7 +37,9 @@ def update_tracks(tracks: list[dict[str]]):
         connection.execute(on_conflict_stmt)
 
 import time
-from config import SLEEP_TIME
+from os import getenv
+from dotenv import load_dotenv
+load_dotenv()
 
 if __name__ == "__main__":
     while True:
@@ -48,5 +50,5 @@ if __name__ == "__main__":
             break
         else:
             logger.info(msg=f"Successfully fetched new tracks")
-            time.sleep(SLEEP_TIME)
+            time.sleep(getenv("update_interval") or 3600)
 
