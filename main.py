@@ -41,6 +41,15 @@ from os import getenv
 from dotenv import load_dotenv
 load_dotenv()
 
+update_interval = getenv("UPDATE_INTERVAL")
+
+if not isinstance(update_interval, int):
+    try:
+        update_interval = int(update_interval)
+    except Exception as e:
+        logger.info(msg=f"Invalid update interval passed defaulting to 3600s updates. error: {e}")
+        update_interval = 3600
+
 if __name__ == "__main__":
     while True:
         try:
@@ -50,5 +59,5 @@ if __name__ == "__main__":
             break
         else:
             logger.info(msg=f"Successfully fetched new tracks")
-            time.sleep(getenv("update_interval") or 3600)
+            time.sleep(update_interval)
 
