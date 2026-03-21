@@ -10,3 +10,17 @@ services:
     volumes:
       - ./data:/app/data
       - ./.cache:/app/.cache
+
+  spotify_api:
+    image: ghcr.io/kylemcginnis197/spotify_db:latest
+    container_name: spotify_api
+    restart: unless-stopped
+    command: ["uvicorn", "api:app", "--host", "0.0.0.0", "--port", "8000"]
+    ports:
+      - "8000:8000"
+    environment:
+      - API_KEY=${API_KEY}
+    volumes:
+      - ./data:/app/data
+    depends_on:
+      - spotify_db

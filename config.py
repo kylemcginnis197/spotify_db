@@ -1,1 +1,0 @@
-SLEEP_TIME = 60 * 60 # sleep time (s) between music history fetches
